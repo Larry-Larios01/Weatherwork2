@@ -1,17 +1,14 @@
-﻿
+﻿using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 using WeatherConcurrentApp.Domain.Entities;
 
-namespace Domain.Interfaces
+namespace WeatherConcurrencyApp.AppCore.Interfaces
 {
-    public interface IWeather : IModel<OpenWeather>
+    public interface IWeatherServices : IServices<OpenWeather>
     {
         List<OpenWeather> findWByCity(Expression<Func<OpenWeather, bool>> where);
-
     }
 }

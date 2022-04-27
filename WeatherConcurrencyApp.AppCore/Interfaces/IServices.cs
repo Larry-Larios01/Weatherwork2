@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IModel<T>
+    public interface IServices<T>
     {
         void Add(T t);
         void Delete(T t);

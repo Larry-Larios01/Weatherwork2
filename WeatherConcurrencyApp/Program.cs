@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Domain.Interfaces;
+using Infraestructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,8 @@ namespace WeatherConcurrencyApp
             var builder = new ContainerBuilder();
             builder.RegisterType<HttpOpenWeatherClient>().As<IHttpOpenWeatherClient>();
             builder.RegisterType<HttpOpenWeatherClientService>().As<IHttpOpenWeatherClientService>();
+            builder.RegisterType<BinaryWeatherRepository>().As<IWeather>();
+            builder.RegisterType<WeatherServices>().As<IWeatherServices>();
             var container = builder.Build();
 
             Application.Run(new FrmMain(container.Resolve<IHttpOpenWeatherClientService>()));

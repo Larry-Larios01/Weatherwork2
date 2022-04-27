@@ -31,9 +31,10 @@ namespace WeatherConcurrencyApp
         {
             this.flpContent = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnOk = new System.Windows.Forms.Button();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.btn_filtrar = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,10 +46,12 @@ namespace WeatherConcurrencyApp
             this.flpContent.Name = "flpContent";
             this.flpContent.Size = new System.Drawing.Size(645, 507);
             this.flpContent.TabIndex = 0;
+            this.flpContent.Paint += new System.Windows.Forms.PaintEventHandler(this.flpContent_Paint);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.btn_filtrar);
+            this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.btnOk);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -56,13 +59,6 @@ namespace WeatherConcurrencyApp
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(645, 73);
             this.panel1.TabIndex = 1;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(27, 13);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(426, 20);
-            this.textBox1.TabIndex = 3;
             // 
             // comboBox1
             // 
@@ -75,13 +71,32 @@ namespace WeatherConcurrencyApp
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(496, 21);
+            this.btnOk.Location = new System.Drawing.Point(459, 37);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(127, 37);
+            this.btnOk.Size = new System.Drawing.Size(75, 25);
             this.btnOk.TabIndex = 0;
-            this.btnOk.Text = "Aceptar";
+            this.btnOk.Text = "agregar";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(27, 10);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(426, 21);
+            this.comboBox2.TabIndex = 3;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
+            // btn_filtrar
+            // 
+            this.btn_filtrar.Location = new System.Drawing.Point(459, 10);
+            this.btn_filtrar.Name = "btn_filtrar";
+            this.btn_filtrar.Size = new System.Drawing.Size(75, 23);
+            this.btn_filtrar.TabIndex = 4;
+            this.btn_filtrar.Text = "filtrar";
+            this.btn_filtrar.UseVisualStyleBackColor = true;
+            this.btn_filtrar.Click += new System.EventHandler(this.btn_filtrar_Click);
             // 
             // FrmMain
             // 
@@ -93,7 +108,6 @@ namespace WeatherConcurrencyApp
             this.Name = "FrmMain";
             this.Text = "Weather Async App";
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -104,7 +118,8 @@ namespace WeatherConcurrencyApp
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Button btn_filtrar;
     }
 }
 
