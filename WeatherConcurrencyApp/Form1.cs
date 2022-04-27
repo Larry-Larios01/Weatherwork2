@@ -47,11 +47,12 @@ namespace WeatherConcurrencyApp
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Control.CheckForIllegalCrossThreadCalls = false;
+                Task.Run(Request).Wait();
 
-            Control.CheckForIllegalCrossThreadCalls = false;
-            Task.Run(Request).Wait();
-            
-            if (openWeather == null)
+                if (openWeather == null)
                 {
                     throw new NullReferenceException("Fallo al obtener el objeto OpeWeather.");
                 }
@@ -59,7 +60,15 @@ namespace WeatherConcurrencyApp
                 string imageLocation = httpOpenWeatherClient.GetImage(openWeather);
                 WeatherPanel weatherPanel = new WeatherPanel(openWeather, imageLocation);
                 flpContent.Controls.Add(weatherPanel);
+
+            }
+            catch
+            {
+
+            }
+
             
+
             
            
  
@@ -94,8 +103,13 @@ namespace WeatherConcurrencyApp
                 var seleccion = weatherServices.findWByCity(expression);
                 foreach(OpenWeather weather in seleccion)
                 {
-                    //string imageLocation = httpOpenWeatherClient.GetImage(weather);
-                    WeatherPanel weathers = new WeatherPanel(weather, $"{AppSettings.Image}{weather.Weather[0].Icon}.png");
+                    string imageLocation = httpOpenWeatherClient.GetImage(weather);
+                    //OpenWeather a = new OpenWeather()
+                    //{
+                    //    Weather = weather.Weather
+                   
+                    //};
+                    WeatherPanel weathers = new WeatherPanel(weather, imageLocation);
                     flpContent.Controls.Add(weathers);
                 }
             }
@@ -105,8 +119,8 @@ namespace WeatherConcurrencyApp
                 var all = weatherServices.Read();
                 foreach (OpenWeather weather in all)
                 {
-                    //string imageLocation = httpOpenWeatherClient.GetImage(weather);
-                    WeatherPanel weathers = new WeatherPanel(weather, $"{AppSettings.Image}{weather.Weather[0].Icon}.png");
+                    string imageLocation = httpOpenWeatherClient.GetImage(weather);
+                    WeatherPanel weathers = new WeatherPanel(weather, imageLocation);
                     flpContent.Controls.Add(weathers);
                 }
             }

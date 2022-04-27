@@ -66,12 +66,22 @@ namespace Infraestructure.Repository
 
                             Type type = pinfo.PropertyType;
                             object obj = pinfo.GetValue(t, null);
+                            if (type.IsGenericType && obj is IList)
+                            {
+                                object objs = pinfo.GetValue(t, null);
+                                for (int i = 0; i < (objs as IList).Count; i++)
+                                {
+                                    WriteObject((objs as IList)[i], bwData);
+                                }
 
+                            }
                             if (type.IsGenericType)
                             {
 
                                 continue;
+
                             }
+
                             if (!type.IsPrimitive && type.IsClass && type != Type.GetType("System.String"))
                             {
                                 PropertyInfo[] infoClass = obj.GetType().GetProperties();
@@ -88,14 +98,6 @@ namespace Infraestructure.Repository
                                 }
                                 continue;
                                 //WriteObject(obj, bwData);
-                            }
-                            if (type.IsGenericType && obj is IList)
-                            {
-                                object objs = pinfo.GetValue(t, null);
-                                for(int i=0; i<(objs as IList).Count; i++)
-                                {
-                                    WriteObject((objs as IList)[i], bwData);
-                                }
                             }
 
 
@@ -239,7 +241,6 @@ namespace Infraestructure.Repository
                     bwData.Write((int)obj);
                     continue;
                 }
-
             }
         }
         public T Get<T>(int id)
@@ -283,39 +284,6 @@ namespace Infraestructure.Repository
 
                         Type type = pinfo.PropertyType;
 
-                        if (!type.IsPrimitive && type.IsClass && type != Type.GetType("System.String"))
-                        {
-
-
-                            PropertyInfo[] infoClass = type.GetProperties();
-                            object objectClass = Activator.CreateInstance(pinfo.PropertyType);
-                            foreach (PropertyInfo PInfoClass in infoClass)
-                            {
-                                if (PInfoClass.Name.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    PInfoClass.SetValue(objectClass, brData.GetValue<int>(TypeCode.Int32));
-                                    pinfo.SetValue(newValue, objectClass);
-                                    break;
-                                }
-                            }
-                            //object j = Activator.CreateInstance(type);
-                            //pinfo.SetValue(newValue, GetObject(j, brData));
-                            continue;
-                        }
-
-                        if (type.IsGenericType)
-                        {
-                            continue;
-                        }
-                        object obj = pinfo.GetValue(newValue, null);
-                        if (type.IsGenericType && obj is IList)
-                        {
-                            object objs = pinfo.GetValue(newValue, null);
-                            for (int i = 0; i < (objs as IList).Count; i++)
-                            {
-                                GetObject((objs as IList)[i], brData);
-                            }
-                        }
 
                         if (type == typeof(int))
                         {
@@ -332,6 +300,7 @@ namespace Infraestructure.Repository
                             pinfo.SetValue(newValue, brData.GetValue<float>(TypeCode.Single));
                             continue;
                         }
+
                         else if (type == typeof(double))
                         {
                             pinfo.SetValue(newValue, brData.GetValue<double>(TypeCode.Double));
@@ -361,6 +330,49 @@ namespace Infraestructure.Repository
                         {
                             pinfo.SetValue(newValue, brData.GetValue<int>(TypeCode.Int32));
                         }
+                        object obj;
+                        try
+                        {
+
+                            obj = Activator.CreateInstance(type);
+                        }
+                        catch (Exception)
+                        {
+                            obj = null;
+                            continue;
+                        }
+
+                        if (type.IsGenericType && obj is IList)
+                        {
+
+                            Type typeList = (obj as IList).GetType().GenericTypeArguments[0];
+                            object j = Activator.CreateInstance(typeList);
+                            (obj as IList).Add(GetObject(j, brData));
+                            pinfo.SetValue(newValue, obj);
+                            continue;
+                        }
+                        if (!type.IsPrimitive && type.IsClass && type != Type.GetType("System.String"))
+                        {
+                            PropertyInfo[] infoClass = type.GetProperties();
+                            object objectClass = Activator.CreateInstance(pinfo.PropertyType);
+                            foreach (PropertyInfo PInfoClass in infoClass)
+                            {
+                                if (PInfoClass.Name.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    PInfoClass.SetValue(objectClass, brData.GetValue<int>(TypeCode.Int32));
+                                    pinfo.SetValue(newValue, objectClass);
+                                    break;
+                                }
+                            }
+                            //object j = Activator.CreateInstance(type);
+                            //pinfo.SetValue(newValue, GetObject(j, brData));
+                            continue;
+                        }
+                        if (type.IsGenericType)
+                        {
+                            continue;
+                        }
+
                         else
                         {
                             continue;
@@ -509,10 +521,6 @@ namespace Infraestructure.Repository
                         if (type.IsGenericType)
                         {
                             continue;
-                        }
-                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<T>))
-                        {
-                            Type itemType = type.GetGenericArguments()[0];
                         }
                         if (type == typeof(int))
                         {

@@ -65,4 +65,5 @@ namespace WeatherConcurrentApp.Domain.Entities
     {
         public int All { get; set; }
     }
+    
 }
