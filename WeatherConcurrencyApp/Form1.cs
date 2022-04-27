@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using WeatherConcurrencyApp.AppCore.Interfaces;
+using WeatherConcurrencyApp.Common;
 using WeatherConcurrencyApp.Infrastructure.OpenWeatherClient;
 using WeatherConcurrentApp.Domain.Entities;
 using WeatherConcurrentApp.Domain.Enum;
@@ -46,10 +47,11 @@ namespace WeatherConcurrencyApp
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Task.Run(Request).Wait();
-                if (openWeather == null)
+
+            Control.CheckForIllegalCrossThreadCalls = false;
+            Task.Run(Request).Wait();
+            
+            if (openWeather == null)
                 {
                     throw new NullReferenceException("Fallo al obtener el objeto OpeWeather.");
                 }
@@ -57,11 +59,10 @@ namespace WeatherConcurrencyApp
                 string imageLocation = httpOpenWeatherClient.GetImage(openWeather);
                 WeatherPanel weatherPanel = new WeatherPanel(openWeather, imageLocation);
                 flpContent.Controls.Add(weatherPanel);
-            }
-            catch (Exception)
-            {
-
-            }
+            
+            
+           
+ 
 
         }
 
@@ -93,8 +94,8 @@ namespace WeatherConcurrencyApp
                 var seleccion = weatherServices.findWByCity(expression);
                 foreach(OpenWeather weather in seleccion)
                 {
-                    string imageLocation = httpOpenWeatherClient.GetImage(weather);
-                    WeatherPanel weathers = new WeatherPanel(weather, imageLocation );
+                    //string imageLocation = httpOpenWeatherClient.GetImage(weather);
+                    WeatherPanel weathers = new WeatherPanel(weather, $"{AppSettings.Image}{weather.Weather[0].Icon}.png");
                     flpContent.Controls.Add(weathers);
                 }
             }
@@ -104,8 +105,8 @@ namespace WeatherConcurrencyApp
                 var all = weatherServices.Read();
                 foreach (OpenWeather weather in all)
                 {
-                    string imageLocation = httpOpenWeatherClient.GetImage(weather);
-                    WeatherPanel weathers = new WeatherPanel(weather, imageLocation);
+                    //string imageLocation = httpOpenWeatherClient.GetImage(weather);
+                    WeatherPanel weathers = new WeatherPanel(weather, $"{AppSettings.Image}{weather.Weather[0].Icon}.png");
                     flpContent.Controls.Add(weathers);
                 }
             }
@@ -117,10 +118,10 @@ namespace WeatherConcurrencyApp
         }
         private void limpiarfly()
         {
-            foreach (Control c in flpContent.Controls)
+            foreach (Control control in flpContent.Controls)
             {
-                ((Panel)c).Dispose();
-
+                flpContent.Controls.Remove(control);
+                control.Dispose();
             }
         }
 

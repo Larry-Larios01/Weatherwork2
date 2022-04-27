@@ -31,7 +31,7 @@ namespace WeatherConcurrencyApp
             builder.RegisterType<WeatherServices>().As<IWeatherServices>();
             var container = builder.Build();
 
-            Application.Run(new FrmMain(container.Resolve<IHttpOpenWeatherClientService>()));
+            Application.Run(new FrmMain(container.Resolve<IHttpOpenWeatherClientService>(), container.Resolve<IWeatherServices>()));
         }
     }
 }

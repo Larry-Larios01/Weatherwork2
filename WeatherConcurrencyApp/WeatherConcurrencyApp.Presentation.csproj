@@ -135,6 +135,10 @@
       <Project>{EF0C82B0-025B-4EA8-A717-0701C254F661}</Project>
       <Name>WeatherConcurrencyApp.AppCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WeatherConcurrencyApp.Common\WeatherConcurrencyApp.Common.csproj">
+      <Project>{61013604-D307-4252-957F-31766ADC0991}</Project>
+      <Name>WeatherConcurrencyApp.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeatherConcurrencyApp.Infrastructure\WeatherConcurrencyApp.Infrastructure.csproj">
       <Project>{16242FEC-3905-4939-86FC-578FA12C1899}</Project>
       <Name>WeatherConcurrencyApp.Infrastructure</Name>

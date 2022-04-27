@@ -89,6 +89,14 @@ namespace Infraestructure.Repository
                                 continue;
                                 //WriteObject(obj, bwData);
                             }
+                            if (type.IsGenericType && obj is IList)
+                            {
+                                object objs = pinfo.GetValue(t, null);
+                                for(int i=0; i<(objs as IList).Count; i++)
+                                {
+                                    WriteObject((objs as IList)[i], bwData);
+                                }
+                            }
 
 
                             if (pinfo.Name.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
@@ -231,6 +239,7 @@ namespace Infraestructure.Repository
                     bwData.Write((int)obj);
                     continue;
                 }
+
             }
         }
         public T Get<T>(int id)
@@ -297,6 +306,15 @@ namespace Infraestructure.Repository
                         if (type.IsGenericType)
                         {
                             continue;
+                        }
+                        object obj = pinfo.GetValue(newValue, null);
+                        if (type.IsGenericType && obj is IList)
+                        {
+                            object objs = pinfo.GetValue(newValue, null);
+                            for (int i = 0; i < (objs as IList).Count; i++)
+                            {
+                                GetObject((objs as IList)[i], brData);
+                            }
                         }
 
                         if (type == typeof(int))
@@ -491,6 +509,10 @@ namespace Infraestructure.Repository
                         if (type.IsGenericType)
                         {
                             continue;
+                        }
+                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<T>))
+                        {
+                            Type itemType = type.GetGenericArguments()[0];
                         }
                         if (type == typeof(int))
                         {
